@@ -1,0 +1,16 @@
+name: Test
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Random change of failure simulating flaky test
+        id: run-test
+        run: exit $(($RANDOM%2))
+        # we want to retry the test if it fails
+        continue-on-error: true
+      - name: Retry test
+        # this step will be skipped if the run-test step is successful
+        if: ${{ steps.run-test.outcome == 'failure' }}
+        run: echo "Retrying the test..."
